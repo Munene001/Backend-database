@@ -41,6 +41,7 @@
             <th>Gender</th>
             <th>City</th>
             <th>Email</th>
+            <th>Actions</th>
         </tr>
 
         <?php
@@ -74,6 +75,7 @@ while ($row = mysqli_fetch_array($result)) {
     echo "<td>" . $row['gender'] . "</td>";
     echo "<td>" . $row['city'] . "</td>";
     echo "<td>" . $row['email'] . "</td>";
+
     echo "</tr>";
 }
 
