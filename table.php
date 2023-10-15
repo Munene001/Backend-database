@@ -82,25 +82,31 @@
 
 
     }
-    .action-icons button i.fa-edit{
+
+    .action-icons button i.fa-edit {
         color: brown;
 
 
     }
-    .action-icons button i.fa-trash-alt{
+
+    .action-icons button i.fa-trash-alt {
         color: red;
 
 
 
     }
-  </style>
+    </style>
 </head>
 
 <body>
     <div class="container">
         <div class="buttons">
+            <div class="search-wrapper">
+                <input type="text" id="searchinput" placeholder="Search..">
+                <button class="button" onclick="searchtable()">Search</button>
+            </div>
             <button class="button edit">Edit</button>
-            <button class="button create">Create</button>
+            <button class="button create"><a href="create_therapist.php">Create</a></button>
             <button class="button delete">Delete</button>
         </div>
         <table>
@@ -158,6 +164,40 @@ while ($row = mysqli_fetch_array($result)) {
 ?>
         </table>
     </div>
+    <script>
+function searchtable() {
+    let input = document.getElementById('searchinput').value; // Get the search input value
+    input = input.toLowerCase(); // Convert the input to lowercase for case-insensitive search
+    let tr = document.querySelectorAll('table tr'); // Get all table rows
+
+    // Loop through all table rows except the first one (header row)
+    for (let i = 1; i < tr.length; i++) {
+        let td = tr[i].getElementsByTagName('td'); // Get all table cells in the current row
+        let rowMatches = false; // Flag to check if the row matches the search query
+
+        // Loop through all cells in the current row
+        for (let j = 0; j < td.length; j++) {
+            let cellText = td[j].textContent || td[j].innerText; // Get cell text
+            cellText = cellText.toLowerCase(); // Convert cell text to lowercase
+
+            // Check if the cell text contains the search input
+            if (cellText.includes(input)) {
+                rowMatches = true; // If a match is found, set the flag to true
+                break; // No need to check other cells in the same row
+            }
+        }
+
+        // Set the row's display style based on the flag
+        if (rowMatches) {
+            tr[i].style.display = ''; // Show the row
+        } else {
+            tr[i].style.display = 'none'; // Hide the row
+        }
+    }
+}
+</script>
+
+
 </body>
 
 </html>
