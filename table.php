@@ -5,6 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
 
     <title>Document</title>
     <style>
@@ -47,6 +56,8 @@
         display: flex;
         flex-direction: row;
         margin-bottom: 5px;
+
+
     }
 
     .button {
@@ -66,6 +77,11 @@
 
     .delete {
         background-color: yellow;
+    }
+
+    .export {
+        background-color: palevioletred;
+        margin-bottom: 5px;
     }
 
     .action-icons {
@@ -91,10 +107,42 @@
 
     .action-icons button i.fa-trash-alt {
         color: red;
+    }
+
+    .search-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+
+    }
+
+    .search {
+        border-radius: 7px;
+        margin-right: 43em;
+        background-color: chocolate;
+    }
+
+    .search-wrapper input[type="text"] {
+        padding: 7px;
+
+
+    }
+
+    .lower {
+        display: flex;
+        flex-direction: row;
 
 
 
     }
+
+    .upper {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    /* Move the dropdown menu to the right of the Export button */
     </style>
 </head>
 
@@ -102,26 +150,49 @@
     <div class="container">
         <div class="buttons">
             <div class="search-wrapper">
-                <input type="text" id="searchinput" placeholder="Search..">
-                <button class="button" onclick="searchtable()">Search</button>
-            </div>
-            <button class="button edit">Edit</button>
-            <button class="button create"><a href="create_therapist.php">Create</a></button>
-            <button class="button delete">Delete</button>
-        </div>
-        <table>
-            <tr>
-                <th>User Id</th>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Speciality</th>
-                <th>Gender</th>
-                <th>City</th>
-                <th>Email</th>
-                <th>Actions</th>
-            </tr>
+                <div class="middle"> <button class=" button export" onclick="exporttable()">Export</button></div>
 
-            <?php
+                <div class="upper">
+                    <input type="text" id="searchinput" placeholder="Search..">
+                    <button class="button search" onclick="searchtable()">Search</button>
+                    <button class="button create"><a href="create_therapist.php">Create</a></button>
+                </div>
+
+
+            </div>
+
+            <script>
+            function exporttable() {
+                $('#example').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [{
+                        extend: 'collection',
+                        text: '',
+                        buttons: ['csv', 'excel', 'pdf']
+                    }]
+                });
+
+            }
+            </script>
+
+
+        </div>
+        <table id="example">
+            <thead>
+                <tr>
+                    <th>User Id</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Speciality</th>
+                    <th>Gender</th>
+                    <th>City</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <?php
 $dbServername = "localhost";
 $dbUsername = "lawrence";
 $dbPassword = "Kikoto12.";
@@ -141,6 +212,7 @@ if (!$result) {
 }
 
 while ($row = mysqli_fetch_array($result)) {
+
     echo "<tr>";
     echo "<td>" . $row['id'] . "</td>";
     echo "<td>" . $row['first_name'] . "</td>";
@@ -150,53 +222,59 @@ while ($row = mysqli_fetch_array($result)) {
     echo "<td>" . $row['city'] . "</td>";
     echo "<td>" . $row['email'] . "</td>";
     echo '<td class="action-icons">
-    <button><a href="change.php?id=' . $row['id'] . '"><i class="fas fa-edit" title="Edit"></i></a></button>
+    <button><a href = "change.php?id=' . $row['id'] . '"><i class="fas fa-edit" title="Edit"></i></a></button>
 
 
 
 
-                            <button><i class="fas fa-trash-alt" title = "Delete"></i></button>
+                            <button><a href = "delete.php?id=' . $row['id'] . '"><i class="fas fa-trash-alt" title = "Delete"></i></a></button>
 
                           </td>';
 
     echo "</tr>";
 }
 ?>
+            </tbody>
         </table>
     </div>
     <script>
-function searchtable() {
-    let input = document.getElementById('searchinput').value; // Get the search input value
-    input = input.toLowerCase(); // Convert the input to lowercase for case-insensitive search
-    let tr = document.querySelectorAll('table tr'); // Get all table rows
+    function searchtable() {
+        let input = document.getElementById('searchinput').value; // Get the search input value
+        input = input.toLowerCase(); // Convert the input to lowercase for case-insensitive search
+        let tr = document.querySelectorAll('table tr'); // Get all table rows
 
-    // Loop through all table rows except the first one (header row)
-    for (let i = 1; i < tr.length; i++) {
-        let td = tr[i].getElementsByTagName('td'); // Get all table cells in the current row
-        let rowMatches = false; // Flag to check if the row matches the search query
+        // Loop through all table rows except the first one (header row)
+        for (let i = 1; i < tr.length; i++) {
+            let td = tr[i].getElementsByTagName('td'); // Get all table cells in the current row
+            let rowMatches = false; // Flag to check if the row matches the search query
 
-        // Loop through all cells in the current row
-        for (let j = 0; j < td.length; j++) {
-            let cellText = td[j].textContent || td[j].innerText; // Get cell text
-            cellText = cellText.toLowerCase(); // Convert cell text to lowercase
+            // Loop through all cells in the current row
+            for (let j = 0; j < td.length; j++) {
+                let cellText = td[j].textContent || td[j].innerText; // Get cell text
+                cellText = cellText.toLowerCase(); // Convert cell text to lowercase
 
-            // Check if the cell text contains the search input
-            if (cellText.includes(input)) {
-                rowMatches = true; // If a match is found, set the flag to true
-                break; // No need to check other cells in the same row
+                // Check if the cell text contains the search input
+                if (cellText.includes(input)) {
+                    rowMatches = true; // If a match is found, set the flag to true
+                    break; // No need to check other cells in the same row
+                }
+            }
+
+            // Set the row's display style based on the flag
+            if (rowMatches) {
+                tr[i].style.display = ''; // Show the row
+            } else {
+                tr[i].style.display = 'none'; // Hide the row
             }
         }
-
-        // Set the row's display style based on the flag
-        if (rowMatches) {
-            tr[i].style.display = ''; // Show the row
-        } else {
-            tr[i].style.display = 'none'; // Hide the row
-        }
     }
-}
-</script>
+    </script>
 
+
+
+</body>
+
+</html>
 
 </body>
 
