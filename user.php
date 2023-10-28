@@ -1,4 +1,47 @@
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
 
+$dbServername = "localhost";
+$dbUsername = "lawrence";
+$dbPassword = "Kikoto12.";
+$dbName = "therapist";
+
+$conn = mysqli_connect($dbServername, $dbUsername, $dbPassword, $dbName);
+
+if (!$conn) {
+    die('could not connect' . mysqli_connect_error());
+}
+
+if ( /*isset($_SERVER["REQUEST_METHOD"]) && */$_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $name = htmlspecialchars($_POST["name"]);
+    $email = htmlspecialchars($_POST["email"]);
+    $password = htmlspecialchars($_POST["password"]);
+
+    // Construct the SQL query
+    $sql = "INSERT INTO users (name, email, password)
+    VALUES ('$name', '$email', '$password')";
+
+// Execute the query
+    if (mysqli_query($conn, $sql)) {
+        echo "users record created successfully.";
+    } else {
+        echo "Error: " . mysqli_error($conn);
+    }
+
+    if (empty($name)) {
+        exit();
+
+    }
+    echo "this are the submitted data";
+
+    header("Location: ../login.php");
+} else {
+    echo "";
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +50,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-    <title>Create Therapist</title>
+    <title>User signup</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -41,6 +84,7 @@
 
         input[type="text"],
         input[type="email"],
+        input[type = "password"],
         select {
             width: 100%;
             padding: 8px;
@@ -63,6 +107,7 @@
             border-radius: 3px;
             padding: 10px 20px;
             cursor: pointer;
+            font-weight: bold;
         }
 
         button[type="submit"]:hover {
@@ -72,33 +117,17 @@
 </head>
 
 <body>
-    <h1>Create Therapist</h1>
-    <form action="connect/post_therapist.php" method="POST">
-        <label for="first_name">First Name</label>
-        <input type="text" name="first_name" required><br>
-        <label for="last_name">Last Name:</label>
-        <input type="text" name="last_name" required><br>
-        <label for="speciality">Speciality</label>
-        <input type="text"  name="speciality" required><br>
-        <label for="gender">Gender:</label>
-        <select  name="gender" required>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-        </select><br>
-
-        <label for="city">City</label>
-        <select name="city" required>
-            <option value="Nairobi">Nairobi</option>
-            <option value="Nakuru">Nakuru</option>
-            <option value="Kisumu">Kisumu</option>
-            <option value="Mombasa">Mombasa</option>
-            <option value="Eldoret">Eldoret</option>
-        </select><br>
-
+    <h1>User Signup</h1>
+    <form action="user.php" method="POST">
+        <label for="name">Name</label>
+        <input type="text" name="name" required><br>
         <label for="email">Email</label>
         <input type="text"  name="email" required><br>
+        <label for="password">Password</label>
+        <input type="password" name="password" required><br>
 
-        <button type="submit">Create Therapist</button>
+
+        <button type="Submit">SignUp</button>
     </form>
 </body>
 

@@ -1,4 +1,11 @@
+<?php
+session_start();
 
+if (isset($_SESSION['user_id'])) {
+    header("Location: ../table.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-    <title>Create Therapist</title>
+    <title>User Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -40,7 +47,7 @@
         }
 
         input[type="text"],
-        input[type="email"],
+        input[type = "password"],
         select {
             width: 100%;
             padding: 8px;
@@ -72,33 +79,15 @@
 </head>
 
 <body>
-    <h1>Create Therapist</h1>
-    <form action="connect/post_therapist.php" method="POST">
-        <label for="first_name">First Name</label>
-        <input type="text" name="first_name" required><br>
-        <label for="last_name">Last Name:</label>
-        <input type="text" name="last_name" required><br>
-        <label for="speciality">Speciality</label>
-        <input type="text"  name="speciality" required><br>
-        <label for="gender">Gender:</label>
-        <select  name="gender" required>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-        </select><br>
-
-        <label for="city">City</label>
-        <select name="city" required>
-            <option value="Nairobi">Nairobi</option>
-            <option value="Nakuru">Nakuru</option>
-            <option value="Kisumu">Kisumu</option>
-            <option value="Mombasa">Mombasa</option>
-            <option value="Eldoret">Eldoret</option>
-        </select><br>
-
+    <h1>User login</h1>
+    <form action="connect/login_handler.php" method="POST">
         <label for="email">Email</label>
-        <input type="text"  name="email" required><br>
+        <input type="text"  name="email" required placeholder="Enter Email"> <br>
+        <label for="password">Password</label>
+        <input type="password" name="password" required placeholder="Enter Password"><br>
 
-        <button type="submit">Create Therapist</button>
+
+        <button type="submit">Login</button>
     </form>
 </body>
 
