@@ -33,6 +33,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $updatedcity = $_POST['city'];
     $updatedemail = $_POST['email'];
 
+    $target_dir = "/var/www/html/uploads/therapist" . $id . "/";
+    $target_file = $target_dir . basename($_FILES["filesToUpload"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    if (isset($_POST["submit"])) {
+        $check = getimagesize($FILES["fileToUpload"]["tmp_name"]);
+        if ($check === false) {
+            echo "file is not an image";
+            $uploadOk = 1;
+        } else {
+            echo "file is an image - " . $check["mime"] . ".";
+            $uploadOk = 1;
+        }
+    }
+    if (file_exists($target_file)) {
+        echo "Sorry,file already exists.";
+        $uploadOk = 0;
+    }
+    if ($FILES["fileToUplaod"]["size"] > 1000000) {
+        echo "Sorry,your file is too large";
+        $uploadOk = 0;
+    }
+    if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
+        echo "Sorry,only jpg,png,jpeg and gif files are allowed";
+        $uploadOk = 0;
+    }
+    if ($uploadOk == 0) {
+        echo "Sorry, your file was not uploaded.";
+    } else {
+        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+            echo "The file " . htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) . " has been uploaded.";
+        } else {
+            echo "Sorry, there was an error uploading your file.";
+        }
+    }
     $updatequery = "UPDATE therapist SET
     first_name = '$updatedfirstname',
     last_name = '$updatedlastname',
@@ -126,7 +161,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <h1>Edit Therapist</h1>
-    <form action="change.php?id=<?php echo $id; ?>" method="POST">
+    <form action="change.php?id=<?php echo $id; ?>" method="POST" enctype="multipart/form-data">
         <label for="first_name">First Name</label>
         <input type="text" name="first_name" required><br>
         <label for="last_name">Last Name:</label>
@@ -150,6 +185,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <label for="email">Email</label>
         <input type="text" name="email" required><br>
+
+        <label for="fileToUpload">ProfilePicture</label>
+        <input type="file" name="fileToUpload" accept="image/*"><br>
 
         <button type="submit">Edit Therapist</button>
     </form>

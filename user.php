@@ -113,6 +113,10 @@ if ( /*isset($_SERVER["REQUEST_METHOD"]) && */$_SERVER["REQUEST_METHOD"] == "POS
         button[type="submit"]:hover {
             background-color: chocolate;
         }
+.login{
+    margin-top: 20px;
+}
+
     </style>
 </head>
 
@@ -128,7 +132,11 @@ if ( /*isset($_SERVER["REQUEST_METHOD"]) && */$_SERVER["REQUEST_METHOD"] == "POS
 
 
         <button type="Submit">SignUp</button>
+
+        <div class = "login">Already have an account?<a href = "login.php">Login</a></div>
     </form>
+
+
 </body>
 
 </html>
