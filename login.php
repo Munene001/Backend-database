@@ -1,11 +1,11 @@
 <?php
 session_start();
-
-//if (isset($_SESSION['user_id'])) {
-// header("Location: ../table.php");
-// exit();
-//}
+if (isset($_GET['error']) && $_GET['error'] === 'invalid') {
+    echo '<script> alert("Invalid email or password");</script>';
+}
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -86,6 +86,7 @@ session_start();
 <body>
     <h1>User login</h1>
     <form action="connect/login_handler.php" method="POST">
+        <div id = "messageBox"></div>
         <label for="email">Email</label>
         <input type="text" name="email" required placeholder="Enter Email"> <br>
         <label for="password">Password</label>

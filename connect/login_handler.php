@@ -27,9 +27,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (mysqli_num_rows($result) == 1) {
         $row = mysqli_fetch_assoc($result);
         $_SESSION['user_id'] = $row['user_id'];
-        header("Location: ../table.php");
+        echo '<script> alert("Login succesful. Redirecting....");
+        window.location.href = "../table.php";</script>';
         exit();
+    } else {
+
+        header('location: ../login.php?error=invalid');
+        exit();
+
     }
-} else {
-    echo "Login Failed . incorrect email or password";
+
 }

@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $updatedcity = $_POST['city'];
     $updatedemail = $_POST['email'];
 
-    $target_dir = "/var/www/html/uploads/therapist" . $id . "/";
+    $target_dir = "/var/www/html/uploads/" . $id . "/";
     $target_file = $target_dir . basename($_FILES["filesToUpload"]["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Sorry,file already exists.";
         $uploadOk = 0;
     }
-    if ($FILES["fileToUplaod"]["size"] > 1000000) {
+    if ($FILES["fileToUplaod"]["size"] > 500000) {
         echo "Sorry,your file is too large";
         $uploadOk = 0;
     }
@@ -86,6 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("Location: ../table.php");
     exit();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
